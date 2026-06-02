@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&family=Barlow:wght@300;400;500;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body { background: #080c10; color: #e6edf3; font-family: 'Barlow', sans-serif; overflow-x: hidden; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: #0d1117; }
+::-webkit-scrollbar-thumb { background: #1c2430; border-radius: 2px; }
+.ticker-wrapper { overflow: hidden; white-space: nowrap; }
+.ticker-track { display: inline-flex; animation: ticker 90s linear infinite; }
+.ticker-track:hover { animation-play-state: paused; }
+@keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+.news-card { transition: all 0.2s ease; border-left: 2px solid transparent; }
+.news-card:hover { border-left-color: #3fb950; background: rgba(63,185,80,0.04); transform: translateX(2px); cursor: pointer; }
+@keyframes statusPulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+.status-live { animation: statusPulse 1.5s ease-in-out infinite; }
