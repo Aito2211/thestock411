@@ -59,7 +59,7 @@ export default function EarningsPage() {
           </Link>
           <nav className="hidden md:flex items-center gap-1 ml-2">
             {(([['/','Markets'],['/earnings','Earnings'],['/screener','Screener']] as [string,string][]).map(([h,l])=>(
-              <Link key={h} href={h} className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${h==='/earnings'?'text-blue-600 bg-blue-50':'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}`}>{l}</Link>
+              <Link key={h} href={h} className={"px-3 py-1.5 text-sm font-medium rounded transition-colors "+(h==='/earnings'?'text-blue-600 bg-blue-50':'text-gray-600 hover:text-gray-900 hover:bg-gray-100')}>{l}</Link>
             ))}
           </nav>
         </div>
@@ -72,7 +72,7 @@ export default function EarningsPage() {
             <p className="text-sm text-gray-500 mt-1">EPS estimates, actuals and surprise data</p>
           </div>
           <div className="flex gap-3">
-            {[([[beat,'Beat','bg-emerald-50','border-emerald-200','text-emerald-600"],[miss,'Miss','bg-red-50','border-red-200','text-red-500'],[earnings.length,'Total','bg-white','border-gray-200','text-gray-800"]] as [number,string,string,string,string][]).map(([v,l,bg,bd,tc])=>(
+            {[([[beat,'Beat','bg-emerald-50','border-emerald-200','text-emerald-600"],[miss,'Miss','bg-red-50','border-red-200',"text-red-500'],[earnings.length,'Total','bg-white','border-gray-200','text-gray-800"]] as [number,string,string,string,string][]).map(([v,l,bg,bd,tc])=>(
               <div key={l} className={`px-4 py-2 rounded-xl text-center border ${bg} ${bd}`}>
                 <div className={`text-lg font-black ${tc}`}>{v}</div>
                 <div className="text-[10px] text-gray-500 uppercase font-semibold">{l}</div>
