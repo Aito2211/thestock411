@@ -21,7 +21,7 @@ const RC: Record<string,{color:string,bg:string}> = {
   'Sell':{color:'#b45309',bg:'#fff7ed'},
   'Strong Sell':{color:'#991b1b',bg:'#fef2f2'}
 }
-const SEC: Record<string,string> = { Technology:'#2563eb',Financials:'#059670',Healthcare:'#7c3aed','Consumer Disc.':'#c2410c',Energy:'#b45309',Industrials:'#1d4ed8','Consumer Staples':'#b45309',Communication:'#db2877' }
+const SEC: Record<string,string> = { Technology:'#2563eb',Financials:'#059669',Healthcare:'#7c3aed','Consumer Disc.':'#c2410c',Energy:'#b45309',Industrials:'#1d4ed8','Consumer Staples':'#b45309',Communication:'#db2777' }
 const SECTORS = ['Technology','Financials','Healthcare','Consumer Disc.','Consumer Staples','Energy','Industrials','Communication']
 
 export default function ScreenerPage() {
@@ -71,8 +71,8 @@ export default function ScreenerPage() {
             <span className="font-black text-lg text-gray-900" style={{fontFamily:"'Barlow Condensed'"}}>THE <span style={{color:'#2563eb'}}>STOCK</span>411</span>
           </Link>
           <nav className="hidden md:flex items-center gap-1 ml-2">
-            {([['/','Markets'],['/earnings','Earnings'],['/screener','Screener']] as [string,string][]).map(([h,l])=>(
-              <Link key={h} href={h} className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${h==='/screener'?'text-blue-600 bg-blue-50':'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}`}>{l}</Link>
+            {([['/', 'Markets'],['/earnings','Earnings'],['/screener','Screener']] as [string,string][]).map(([h,l])=>(
+              <Link key={h} href={h} className={"px-3 py-1.5 text-sm font-medium rounded transition-colors "+(h==='/screener'?'text-blue-600 bg-blue-50':'text-gray-600 hover:text-gray-900 hover:bg-gray-100')}>{l}</Link>
             ))}
           </nav>
         </div>
