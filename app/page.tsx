@@ -197,7 +197,7 @@ export default function Home() {
             </div>
 
             {loading?<div className="rounded-xl p-5 mb-3 animate-pulse bg-white border border-gray-200" style={{height:180}}/>:filteredNews[0]?(
-              <div className="news-card rounded-xl p-5 mb-3 bg-white border border-gray-200 shadow-sm">
+              <div className="news-card rounded-xl p-5 mb-3 bg-white border border-gray-200 shadow-sm cursor-pointer" onClick={()=>filteredNews[0]?.url&&window.open(filteredNews[0].url,'_blank')}>
                 <div className="flex items-center gap-2 mb-3">
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide" style={{background:CAT_BG[filteredNews[0].category]||'#f3f4f6',color:CAT[filteredNews[0].category]||'#6b7280'}}>{filteredNews[0].category}</span>
                   <span className="text-xs text-gray-500 font-medium">{filteredNews[0].source}</span>
@@ -212,7 +212,7 @@ export default function Home() {
             <div className="space-y-0.5">
               {loading?Array.from({length:6}).map((_,i)=><div key={i} className="py-3 px-3 rounded-lg animate-pulse bg-white border border-gray-100 mb-1"><div className="h-4 rounded w-3/4 mb-2 bg-gray-100"/><div className="h-3 rounded w-1/4 bg-gray-100"/></div>):
               filteredNews.slice(1).map(item=>(
-                <div key={item.id} className="news-card py-3 px-3 rounded-lg bg-white border border-gray-100 mb-1">
+                <div key={item.id} className="news-card py-3 px-3 rounded-lg bg-white border border-gray-100 mb-1 cursor-pointer" onClick={()=>item.url&&window.open(item.url,'_blank')}>
                   <div className="flex items-start gap-2">
                     <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full uppercase shrink-0 mt-0.5" style={{background:CAT_BG[item.category]||'#f3f4f6',color:CAT[item.category]||'#6b7280'}}>{item.category}</span>
                     <div className="flex-1 min-w-0">
