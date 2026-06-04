@@ -10,7 +10,7 @@ const MOS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','De
 
 function sc(s: number|null) {
   if(s===null)return'#9ca3af'
-  if(s>5)return'#059670'
+  if(s>5)return'#059669'
   if(s>0)return'#10b981'
   if(s>-5)return'#f59e0b'
   return'#ef4444'
@@ -35,7 +35,7 @@ export default function EarningsPage() {
 
   useEffect(()=>{load()},[load])
 
-  const byDate:Record<string,E[]>={}
+  const byDate: Record<string,E[]>={}
   if(weekStart){for(let i=0;i<5;i++){const d=new Date(weekStart+'T12:00:00');d.setDate(d.getDate()+i);byDate[d.toISOString().split('T')[0]]=[]}}
   earnings.forEach(e=>{if(byDate[e.date])byDate[e.date].push(e)})
 
@@ -58,7 +58,7 @@ export default function EarningsPage() {
             <span className="font-black text-lg text-gray-900" style={{fontFamily:"'Barlow Condensed'"}}>THE <span style={{color:'#2563eb'}}>STOCK</span>411</span>
           </Link>
           <nav className="hidden md:flex items-center gap-1 ml-2">
-            {(([['/','Markets'],['/earnings','Earnings'],['/screener','Screener']] as [string,string][]).map(([h,l])=>(
+            {([['/', 'Markets'],['/earnings','Earnings'],['/screener','Screener']] as [string,string][]).map(([h,l])=>(
               <Link key={h} href={h} className={"px-3 py-1.5 text-sm font-medium rounded transition-colors "+(h==='/earnings'?'text-blue-600 bg-blue-50':'text-gray-600 hover:text-gray-900 hover:bg-gray-100')}>{l}</Link>
             ))}
           </nav>
@@ -72,12 +72,18 @@ export default function EarningsPage() {
             <p className="text-sm text-gray-500 mt-1">EPS estimates, actuals and surprise data</p>
           </div>
           <div className="flex gap-3">
-            {[([[beat,'Beat','bg-emerald-50','border-emerald-200','text-emerald-600"],[miss,'Miss','bg-red-50','border-red-200',"text-red-500'],[earnings.length,'Total','bg-white','border-gray-200','text-gray-800"]] as [number,string,string,string,string][]).map(([v,l,bg,bd,tc])=>(
-              <div key={l} className={`px-4 py-2 rounded-xl text-center border ${bg} ${bd}`}>
-                <div className={`text-lg font-black ${tc}`}>{v}</div>
-                <div className="text-[10px] text-gray-500 uppercase font-semibold">{l}</div>
-              </div>
-            ))}
+            <div className="px-4 py-2 rounded-xl text-center bg-emerald-50 border border-emerald-200">
+              <div className="text-lg font-black text-emerald-600">{beat}</div>
+              <div className="text-[10px] text-gray-500 uppercase font-semibold">Beat</div>
+            </div>
+            <div className="px-4 py-2 rounded-xl text-center bg-red-50 border border-red-200">
+              <div className="text-lg font-black text-red-500">{miss}</div>
+              <div className="text-[10px] text-gray-500 uppercase font-semibold">Miss</div>
+            </div>
+            <div className="px-4 py-2 rounded-xl text-center bg-white border border-gray-200">
+              <div className="text-lg font-black text-gray-800">{earnings.length}</div>
+              <div className="text-[10px] text-gray-500 uppercase font-semibold">Total</div>
+            </div>
           </div>
         </div>
 
@@ -99,9 +105,9 @@ export default function EarningsPage() {
               <div key={date} className="flex-1 min-w-[180px]">
                 <div className={"text-center py-3 px-2 rounded-t-xl "+(isToday?'bg-blue-600 text-white':'bg-white border-t border-x border-gray-200')}>
                   <div className={"text-xs font-bold uppercase tracking-widest "+(isToday?'text-blue-200':'text-gray-400')}>{DAYS[d.getDay()-1]}</div>
-                  <div className={`text-lg font-black ${isToday?'text-white':'text-gray-800'}`} style={{fontFamily:"'Barlow Condensed'"}}>{MOS[d.getMonth()]} {d.getDate()}</div>
-                  {isToday&&<div className="text-[10px] text-blue-200 font-bold uppercase">Today</div>}
-                  <div className={`text-[11px] mt-1 ${isToday?'text-blue-200':'text-gray-400'}`}>{entries.length} reports</div>
+                  <div className={"text-lg font-black "+(isToday?'text-white':'text-gray-800')} style={{fontFamily:"'Barlow Condensed'"}}>{MOS[d.getMonth()]} {d.getDate()}</div>
+                  {isToday&&<div className="text-[10px] text-blue-200 font-bold">Today</div>}
+                  <div className={"text-[11px] mt-1 "+(isToday?'text-blue-200':'text-gray-400')}>{entries.length} reports</div>
                 </div>
                 <div className="border border-gray-200 rounded-b-xl overflow-hidden bg-white">
                   {bmo.length>0&&<>
