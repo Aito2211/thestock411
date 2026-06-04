@@ -99,7 +99,7 @@ function TickerBar({quotes}:{quotes:Quote[]}) {
           <span key={i} className="inline-flex items-center gap-2 px-5 text-xs border-r border-gray-100" style={{minWidth:'max-content'}}>
             <span className="font-bold text-gray-800 tracking-wide">{q.symbol}</span>
             <span className="text-gray-600">${q.price}</span>
-            <span className={up?'text-emerald-600 font-semibold':'text-red-500 font-semibold'}>{up?'▲':'▼'} {q.changePercent}%</span>
+            <span className={up?'text-emerald-600 font-semibold':'text-red-500 font-semibold'}>{up?'^':'v'} {q.changePercent}%</span>
           </span>
         )})}
       </div>
@@ -196,7 +196,6 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Featured story */}
             {loading?<div className="rounded-xl p-5 mb-3 animate-pulse bg-white border border-gray-200" style={{height:180}}/>:filteredNews[0]?(
               <div className="news-card rounded-xl p-5 mb-3 bg-white border border-gray-200 shadow-sm">
                 <div className="flex items-center gap-2 mb-3">
@@ -229,10 +228,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Sidebar */}
           <div className="lg:col-span-1 xl:col-span-2 space-y-6">
-
-            {/* Top Movers */}
             <section>
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-base font-black uppercase tracking-wider text-gray-900" style={{fontFamily:"'Barlow Condensed'"}}><Activity size={14} className="inline mr-2 text-amber-500"/>Top Movers</h2>
@@ -242,92 +238,48 @@ export default function Home() {
                 {MOVERS.map(m=>(
                   <div key={m.symbol} className="p-3 rounded-xl bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <div className="font-bold text-sm text-gray-900">{m.symbol}</div>
-                        <div className="text-[11px] text-gray-500">{m.name}</div>
-                      </div>
+                      <div><div className="font-bold text-sm text-gray-900">{m.symbol}</div><div className="text-[11px] text-gray-500">{m.name}</div></div>
                       <div className={"text-sm font-bold flex items-center gap-0.5 "+(m.up?'text-emerald-600':'text-red-500')}>{m.up?<ArrowUpRight size={14}/>:<ArrowDownRight size={14}/>}{m.pct}</div>
                     </div>
-                    <ResponsiveContainer width="100%" height={36}>
-                      <LineChart data={spark(m.up)}><Line type="monotone" dataKey="v" stroke={m.up?'#10b981':'#ef4444'} strokeWidth={1.5} dot={false}/><YAxis domain={['auto','auto']} hide/></LineChart>
-                    </ResponsiveContainer>
-                    <div className="flex justify-between mt-1.5">
-                      <span className="text-[11px] text-gray-400">Live</span>
-                      <span className="text-[11px] font-mono font-semibold text-gray-700">${m.price}</span>
-                    </div>
+                    <ResponsiveContainer width="100%" height={36}><LineChart data={spark(m.up)}><Line type="monotone" dataKey="v" stroke={m.up?'#10b981':'#ef4444'} strokeWidth={1.5} dot={false}/><YAxis domain={['auto','auto']} hide/></LineChart></ResponsiveContainer>
+                    <div className="flex justify-between mt-1.5"><span className="text-[11px] text-gray-400">Live</span><span className="text-[11px] font-mono font-semibold text-gray-700">${m.price}</span></div>
                   </div>
                 ))}
               </div>
             </section>
-
-            {/* Global Markets */}
             <section>
               <h2 className="text-base font-black uppercase tracking-wider text-gray-900 mb-3" style={{fontFamily:"'Barlow Condensed'"}}><Globe size={14} className="inline mr-2 text-blue-600"/>Global Markets</h2>
-              <div className="rounded-xl overflow-hidden bg-white border border-gray-200 shadow-sm">
-                {GLOBAL.map((m,i)=>(
-                  <div key={m.name} className="flex items-center justify-between px-4 py-2.5 hover:bg-gray-50 transition-colors" style={{borderBottom:i<GLOBAL.length-1?'1px solid #f3f4f6':'none'}}>
-                    <div>
-                      <div className="text-sm font-semibold text-gray-800">{m.name}</div>
-                      <div className="text-[11px] text-gray-500">{m.region}</div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-sm font-mono font-medium text-gray-800">{m.value}</div>
-                      <div className={"text-xs font-semibold "+(m.up?'text-emerald-600':'text-red-500')}>{m.up?'▲':'▼'} {m.change}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <div className="rounded-xl overflow-hidden bg-white border border-gray-200 shadow-sm">{GLOBAL.map((m,i)=>(
+                <div key={m.name} className="flex items-center justify-between px-4 py-2.5 hover:bg-gray-50 transition-colors" style={{borderBottom:i<GLOBAL.length-1?'1px solid #f3f4f6':'none'}}>
+                  <div><div className="text-sm font-semibold text-gray-800">{m.name}</div><div className="text-[11px] text-gray-500">{m.region}</div></div>
+                  <div className="text-right"><div className="text-sm font-mono font-medium text-gray-800">{m.value}</div><div className={"text-xs font-semibold "+(m.up?'text-emerald-600':'text-red-500')}>{m.up?'^':'v'} {m.change}</div></div>
+                </div>))}</div>
             </section>
-
-            {/* Sector Performance */}
             <section>
               <h2 className="text-base font-black uppercase tracking-wider text-gray-900 mb-3" style={{fontFamily:"'Barlow Condensed'"}}><TrendingUp size={14} className="inline mr-2 text-emerald-600"/>Sector Performance</h2>
-              <div className="space-y-2">
-                {[z�ame:'Technology',pct:1.42,up:true},{name:'Energy',pct:-1.51,up:false},{name:'Financials',pct:0.55,up:true},{name:'Healthcare',pct:0.22,up:true},{name:'Consumer Disc.',pct:-0.38,up:false},{name:'Industrials',pct:0.61,up:true},{name:'Real Estate',pct:-0.19,up:false},{name:'Materials',pct:0.44,up:true}].map(s=>(
-                  <div key={s.name} className="flex items-center gap-3 bg-white rounded-lg px-3 py-2 border border-gray-100">
-                    <span className="text-xs text-gray-600 w-32 shrink-0 font-medium">{s.name}</span>
-                    <div className="flex-1 h-4 rounded-full overflow-hidden bg-gray-100">
-                      <div className="h-full rounded-full flex items-center justify-end pr-2 text-[10px] font-bold text-white" style={{width:Math.min(Math.abs(s.pct)*20,100)+'%',background:s.up?'#10b981':'#ef4444',minWidth:44}}>
-                        {s.up?'+':''}{s.pct}%
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <div className="space-y-2">{[{name:'Technology',pct:1.42,up:true},{name:'Energy',pct:-1.51,up:false},{name:'Financials',pct:0.55,up:true},{name:'Healthcare',pct:0.22,up:true},{name:'Consumer Disc.',pct:-0.38,up:false},{name:'Industrials',pct:0.61,up:true},{name:'Real Estate',pct:-0.19,up:false},{name:'Materials',pct:0.44,up:true}].map(s=>(
+                <div key={s.name} className="flex items-center gap-3 bg-white rounded-lg px-3 py-2 border border-gray-100">
+                  <span className="text-xs text-gray-600 w-32 shrink-0 font-medium">{s.name}</span>
+                  <div className="flex-1 h-4 rounded-full overflow-hidden bg-gray-100"><div className="h-full rounded-full flex items-center justify-end pr-2 text-[10px] font-bold text-white" style={{width:Math.min(Math.abs(s.pct)*20,100)+'%',background:s.up?'#10b981':'#ef4444',minWidth:44}}>{s.up?'+':''}{s.pct}%</div></div>
+                </div>))}</div>
             </section>
-
-            {/* Newsletter CTA */}
             <section className="rounded-xl p-5 border" style={{background:'linear-gradient(135deg,#1e3a5f,#2563eb)',borderColor:'#2563eb'}}>
               <div className="flex items-center gap-2 mb-2"><Zap size={16} className="text-yellow-300"/><span className="text-xs font-bold uppercase tracking-widest text-blue-200">Free Newsletter</span></div>
               <h3 className="font-black text-lg mb-1 text-white" style={{fontFamily:"'Barlow Condensed'"}}>The Stock411 Daily Brief</h3>
               <p className="text-sm text-blue-200 mb-4">Pre-market intelligence, top movers, and macro signals every morning at 8 AM ET.</p>
-              <div className="flex gap-2">
-                <input type="email" placeholder="your@email.com" className="flex-1 px-3 py-2 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white/10 border border-white/20 text-white placeholder-blue-300"/>
-                <button className="px-4 py-2 text-sm font-bold rounded-lg bg-yellow-400 text-gray-900 hover:bg-yellow-300 transition-colors">Subscribe</button>
-              </div>
+              <div className="flex gap-2"><input type="email" placeholder="your@email.com" className="flex-1 px-3 py-2 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white/10 border border-white/20 text-white placeholder-blue-300"/><button className="px-4 py-2 text-sm font-bold rounded-lg bg-yellow-400 text-gray-900 hover:bg-yellow-300 transition-colors">Subscribe</button></div>
             </section>
-
-            {/* Trending */}
             <section>
               <h2 className="text-base font-black uppercase tracking-wider text-gray-900 mb-3" style={{fontFamily:"'Barlow Condensed'"}}><Star size={14} className="inline mr-2 text-amber-500"/>Trending Now</h2>
-              <div className="flex flex-wrap gap-2">
-                {['NVDA','AAPL','TSLA','SPY','QQQ','AMD','META','BTC-USD','MSFT','PLTR','COIN','GLD','ARKK','AMZN','LLY'].map(t=>(
-                  <a key={t} href="#" className="px-2.5 py-1 text-xs rounded-lg font-mono font-medium bg-white border border-gray-200 text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 transition-colors">{t}</a>
-                ))}
-              </div>
+              <div className="flex flex-wrap gap-2">{['NVDA','AAPL','TSLA','SPY','QQQ','AMD','META','BTC-USD','MSFT','PLTR','COIN','GLD','ARKK','AMZN','LLY'].map(t=>(<a key={t} href="#" className="px-2.5 py-1 text-xs rounded-lg font-mono font-medium bg-white border border-gray-200 text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 transition-colors">{t}</a>))}</div>
             </section>
           </div>
         </div>
       </main>
-
       <footer className="border-t border-gray-200 bg-white mt-8">
         <div className="max-w-screen-2xl mx-auto px-4 py-6 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <p className="text-xs text-gray-400">© 2025 TheStock411.com · Data delayed 15 min · Not financial advice</p>
-          <div className="flex gap-4 text-xs text-gray-400">
-            <a href="#" className="hover:text-gray-600">Privacy</a>
-            <a href="#" className="hover:text-gray-600">Terms</a>
-            <a href="#" className="hover:text-gray-600">Disclaimer</a>
-          </div>
+          <p className="text-xs text-gray-400">&copy; 2025 TheStock411.com - Data delayed 15 min - Not financial advice</p>
+          <div className="flex gap-4 text-xs text-gray-400"><a href="#" className="hover:text-gray-600">Privacy</a><a href="#" className="hover:text-gray-600">Terms</a><a href="#" className="hover:text-gray-600">Disclaimer</a></div>
         </div>
       </footer>
     </div>
