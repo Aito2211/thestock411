@@ -206,7 +206,7 @@ export default function Home() {
                 <h3 className="font-bold leading-snug mb-2 text-gray-900 text-lg" style={{fontFamily:"'Barlow Condensed'"}}>{filteredNews[0].title}</h3>
                 <p className="text-sm text-gray-600 leading-relaxed">{filteredNews[0].summary}</p>
                 <div className="mt-3 flex items-center text-xs text-blue-600 font-semibold gap-1">Read full story<ChevronRight size={12}/></div>
-              </div>
+              </a>
             ):null}
 
             <div className="space-y-0.5">
@@ -223,7 +223,7 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </a>
               ))}
             </div>
           </div>
