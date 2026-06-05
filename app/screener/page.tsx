@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState, useCallback } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { BarChart2, Search, Filter, ArrowUpDown, ChevronUp, ChevronDown, Zap } from 'lucide-react'
 
@@ -27,7 +28,8 @@ const SECTORS = ['Technology','Financials','Healthcare','Consumer Disc.','Consum
 export default function ScreenerPage() {
   const [stocks, setStocks] = useState<Stock[]>([])
   const [loading, setLoading] = useState(true)
-  const [query, setQuery] = useState('')
+  const searchParams = useSearchParams()
+  const [query, setQuery] = useState(searchParams?.get('q') || '')
   const [sector, setSector] = useState('all')
   const [rating, setRating] = useState('all')
   const [sortBy, setSortBy] = useState('mktCap')
