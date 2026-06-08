@@ -1,24 +1,55 @@
 import { NextResponse } from 'next/server'
+
+const KEY = process.env.FINNHUB_API_KEY || ''
+const BASE = 'https://finnhub.io/api/v1'
+
+function getMonday(offset: number): Date {
+  const d = new Date()
+  const day = d.getDay()
+  d.setDate(d.getDate() - (day === 0 ? 6 : day - 1) + offset * 7)
+  d.setHours(0,0,0,0)
+  return d
+}
+function fmt(d: Date) { return d.toISOString().split('T')[0] }
+
+function mockEarnings(start: Date) {
+  const cos = [
+    { symbol:'AAPL', name:'Apple Inc.', time:'AMC', mktCap:'$3.2T', sector:'Technology' },
+    { symbol:'MSFT', name:'Microsoft Corp.', time:'AMC', mktCap:'$3.3T', sector:'Technology' },
+    { symbol:'NVDA', name:'NVIDIA Corp.', time:'AMC', mktCap:'$2.8T', sector:'Technology' },
+    { symbol:'GOOGL', name:'Alphabet Inc.', time:'AMC', mktCap:'$2.1T', sector:'Technology' },
+    { symbol:'AMZN', name:'Amazon.com', time:'AMC', mktCap:'$1.9T', sector:'Technology' },
+    { symbol:'META', name:'Meta Platforms', time:'AMC', mktCap:'$1.3T', sector:'Technology' },
+    { symbol:'TSLA', name:'Tesla Inc.', time:'AMC', mktCap:'$780B', sector:'Consumer Disc.' },
+    { symbol:'JPM', name:'JPMorgan Chase', time:'BMO', mktCap:'$570B', sector:'Financials' },
+  ]
+  return cos.map((co, i) => {
+    const d = new Date(start); d.setDate(d.getDate() + (i % 5))
+    return { ...co, date: fmt(d), epsEstimate: parseFloat((Math.random()*3+0.5).toFixed(2)), epsActual: null, surprise: null, status:'upcoming' }
+  })
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const weekOffset = parseInt(searchParams.get('week') || '0')
-  const today = new Date()
-  const baseDate = new Date(today)
-  baseDate.setDate(today.getDate() + weekOffset * 7)
-  const monday = new Date(baseDate)
-  monday.setDate(baseDate.getDate() - baseDate.getDay() + 1)
-  function d(o: number) { const dt = new Date(monday); dt.setDate(monday.getDate() + o); return dt.toISOString().split('T')[0] }
-  const earnings = [
-    { symbol:'AAPL', name:'Apple Inc.', date:d(0), time:'AMC', epsEstimate:1.35, epsActual:null, revenueEstimate:94200, revenueActual:null, surprise:null, mktCap:'$3.2T', sector:'Technology', status:'upcoming' },
-    { symbol:'CAT', name:'Caterpillar', date:d(0), time:'BMO', epsEstimate:5.12, epsActual:5.34, revenueEstimate:16800, revenueActual:17100, surprise:4.3, mktCap:'$164B', sector:'Industrials', status:'reported' },
-    { symbol:'MSFT', name:'Microsoft', date:d(1), time:'AMC', epsEstimate:3.10, epsActual:null, revenueEstimate:64400, revenueActual:null, surprise:null, mktCap:'$3.3T', sector:'Technology', status:'upcoming' },
-    { symbol:'GOOGL', name:'Alphabet', date:d(1), time:'AMC', epsEstimate:1.84, epsActual:null, revenueEstimate:89100, revenueActual:null, surprise:null, mktCap:'$2.3T', sector:'Technology', status:'upcoming' },
-    { symbol:'V', name:'Visa Inc.', date:d(1), time:'AMC', epsEstimate:2.43, epsActual:2.51, revenueEstimate:9200, revenueActual:9440, surprise:3.3, mktCap:'$545B', sector:'Financials', status:'reported' },
-    { symbol:'META', name:'Meta Platforms', date:d(2), time:'AMC', epsEstimate:4.72, epsActual:null, revenueEstimate:38700, revenueActual:null, surprise:null, mktCap:'$1.4T', sector:'Technology', status:'upcoming' },
-    { symbol:'AMZN', name:'Amazon', date:d(2), time:'AMC', epsEstimate:1.03, epsActual:null, revenueEstimate:148500, revenueActual:null, surprise:null, mktCap:'$2.0T', sector:'Consumer Disc.', status:'upcoming' },
-    { symbol:'NVDA', name:'NVIDIA', date:d(3), time:'AMC', epsEstimate:0.59, epsActual:null, revenueEstimate:24200, revenueActual:null, surprise:null, mktCap:'$3.3T', sector:'Technology', status:'upcoming' },
-    { symbol:'COIN', name:'Coinbase', date:d(3), time:'AMC', epsEstimate:1.12, epsActual:null, revenueEstimate:1550, revenueActual:null, surprise:null, mktCap:'$58B', sector:'Financials', status:'upcoming' },
-    { symbol:'XOM', name:'Exxon Mobil', date:d(4), time:'BMO', epsEstimate:2.01, epsActual:2.14, revenueEstimate:88400, revenueActual:90200, surprise:6.5, mktCap:'$518B', sector:'Energy', status:'reported' },
-  ]
-  return NextResponse.json({ earnings, weekStart: monday.toISOString().split('T')[0] })
+  const start = getMonday(weekOffset)
+  const end = new Date(start); end.setDate(end.getDate() + 4)
+  if (!KEY) return NextResponse.json({ earnings: mockEarnings(start), weekStart: fmt(start) })
+  try {
+    const r = await fetch(`${BASE}/calendar/earnings?from=${fmt(start)}&to=${fmt(end)}&token=${KEY}`, { next: { revalidate: 3600 } })
+    const data = r.ok ? await r.json() : {}
+    const raw = (data.earningsCalendar || []).slice(0, 50)
+    const earnings = raw.map((e: Record<string,unknown>) => ({
+      symbol: e.symbol as string, name: e.symbol as string,
+      date: e.date as string,
+      time: e.hour === 'bmo' ? 'BMO' : 'AMC',
+      epsEstimate: e.epsEstimate ?? null, epsActual: e.epsActual ?? null,
+      surprise: e.surprisePercent ?? null,
+      mktCap: '', sector: '',
+      status: e.epsActual !== null ? 'reported' : 'upcoming',
+    }))
+    return NextResponse.json({ earnings: earnings.length > 0 ? earnings : mockEarnings(start), weekStart: fmt(start) })
+  } catch {
+    return NextResponse.json({ earnings: mockEarnings(start), weekStart: fmt(start) })
+  }
 }
