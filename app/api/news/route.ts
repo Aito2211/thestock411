@@ -1,19 +1,51 @@
 import { NextResponse } from 'next/server'
+
+const KEY = process.env.FINNHUB_API_KEY || ''
+const BASE = 'https://finnhub.io/api/v1'
+
+function mapCategory(cat: string, headline: string): string {
+  const h = headline.toLowerCase()
+  if (h.includes('earn') || h.includes('eps') || h.includes('revenue') || h.includes('beat') || h.includes('miss')) return 'Earnings'
+  if (h.includes('fed') || h.includes('rate') || h.includes('inflation') || h.includes('gdp') || h.includes('cpi')) return 'Macro'
+  if (h.includes('crypto') || h.includes('bitcoin') || h.includes('btc') || h.includes('ethereum') || h.includes('eth')) return 'Crypto'
+  if (h.includes('china') || h.includes('europe') || h.includes('global') || h.includes('japan') || h.includes('world')) return 'Global'
+  if (h.includes('tech') || h.includes('ai ') || h.includes('chip') || h.includes('nvidia') || h.includes('software')) return 'Tech'
+  if (cat === 'crypto') return 'Crypto'
+  return 'Markets'
+}
+
+const MOCK = [
+  { id:'1', title:'Fed Signals Rate Cuts as Inflation Cools', summary:'Federal Reserve officials hinted at rate reductions as CPI data came in below expectations.', source:'Reuters', time: new Date(Date.now()-480000).toISOString(), category:'Macro', url:'https://finance.yahoo.com/news/', sentiment:'positive' },
+  { id:'2', title:'NVIDIA Smashes Earnings, Stock Surges After-Hours', summary:'AI chipmaker NVIDIA reported revenue up 262% YoY as data center sales hit record highs.', source:'Bloomberg', time: new Date(Date.now()-1320000).toISOString(), category:'Earnings', url:'https://finance.yahoo.com/news/', sentiment:'positive' },
+  { id:'3', title:'S&P 500 Hits New All-Time High Amid Tech Rally', summary:'The benchmark index crossed 5,500 as semiconductor and AI stocks led broad market gains.', source:'CNBC', time: new Date(Date.now()-2400000).toISOString(), category:'Markets', url:'https://finance.yahoo.com/news/', sentiment:'positive' },
+  { id:'4', title:'Tesla Deliveries Miss Estimates for Third Quarter', summary:'EV maker reported quarterly deliveries below Wall Street expectations amid rising competition.', source:'WSJ', time: new Date(Date.now()-3600000).toISOString(), category:'Earnings', url:'https://finance.yahoo.com/news/', sentiment:'negative' },
+  { id:'5', title:'Bitcoin Surges Past $70,000 on ETF Inflows', summary:'BTC hit new highs as spot Bitcoin ETFs recorded record daily inflows of $1.2 billion.', source:'CoinDesk', time: new Date(Date.now()-5400000).toISOString(), category:'Crypto', url:'https://finance.yahoo.com/crypto/', sentiment:'positive' },
+  { id:'6', title:'Oil Prices Drop on Rising US Inventory Data', summary:'WTI crude fell 2% after EIA reported a larger-than-expected build in US oil inventories.', source:'Reuters', time: new Date(Date.now()-7200000).toISOString(), category:'Markets', url:'https://finance.yahoo.com/news/', sentiment:'negative' },
+]
+
 export async function GET() {
-  const now = Date.now()
-  const articles = [
-    { id:'1', title:'Fed Signals Potential Rate Cuts as Inflation Data Cools', summary:'Federal Reserve officials hinted at possible interest rate reductions later this year as consumer price data came in below expectations, boosting market sentiment across equities.', source:'Reuters', time:new Date(now-480000).toISOString(), category:'Macro', url:'https://finance.yahoo.com/news/', sentiment:'positive' },
-    { id:'2', title:'NVIDIA Smashes Earnings Estimates, Stock Surges After-Hours', summary:'AI chipmaker NVIDIA reported quarterly revenue up 262% year-over-year, with data center sales driving record profits. The stock jumped over 8% in after-hours trading.', source:'Bloomberg', time:new Date(now-1320000).toISOString(), category:'Earnings', url:'https://finance.yahoo.com/news/nvidia-earnings/', sentiment:'positive' },
-    { id:'3', title:'S&P 500 Hits New All-Time High Amid Tech Rally', summary:'The benchmark index crossed 5,500 for the first time as technology shares led gains. Semiconductor and AI-related stocks were the primary drivers of the advance.', source:'Wall Street Journal', time:new Date(now-2700000).toISOString(), category:'Markets', url:'https://finance.yahoo.com/news/sp500-record/', sentiment:'positive' },
-    { id:'4', title:'China Manufacturing Data Disappoints, Weighs on Global Markets', summary:'PMI readings from China came in below forecasts for the third consecutive month, raising concerns about global economic momentum. Asian markets pulled back on the news.', source:'Financial Times', time:new Date(now-4020000).toISOString(), category:'Global', url:'https://finance.yahoo.com/news/tesla-deliveries/', sentiment:'negative' },
-    { id:'5', title:'Bitcoin Crosses $67,000 as Institutional Demand Surges', summary:'The worlds largest cryptocurrency extended its rally as spot Bitcoin ETFs recorded their third-largest inflow day, signaling strong institutional appetite for digital assets.', source:'CoinDesk', time:new Date(now-5400000).toISOString(), category:'Crypto', url:'https://finance.yahoo.com/crypto/', sentiment:'positive' },
-    { id:'6', title:'Tesla Cuts Prices Again in Competitive EV Market', summary:'Tesla reduced prices on its Model 3 and Model Y vehicles in key markets, continuing its strategy to maintain market share as competition intensifies from Chinese rivals.', source:'CNBC', time:new Date(now-6900000).toISOString(), category:'Autos', url:'https://finance.yahoo.com/news/oil-prices/', sentiment:'negative' },
-    { id:'7', title:'Warren Buffett Berkshire Reveals New Positions in 13F Filing', summary:'Berkshire quarterly disclosure showed new stakes in several energy and financial companies while trimming Apple holdings, giving investors insight into the conglomerate strategy.', source:'MarketWatch', time:new Date(now-8400000).toISOString(), category:'Investing', url:'https://finance.yahoo.com/news/apple-antitrust/', sentiment:'neutral' },
-    { id:'8', title:'Oil Prices Retreat as OPEC+ Considers Production Increases', summary:'Crude futures fell over 2% on reports that OPEC+ members are discussing gradually unwinding output cuts in coming months, easing supply concerns that had supported prices.', source:'Reuters', time:new Date(now-10680000).toISOString(), category:'Commodities', url:'https://finance.yahoo.com/news/jobs-report/', sentiment:'negative' },
-    { id:'9', title:'Apple Intelligence Features Drive Record App Store Downloads', summary:'Apple AI-powered features in iOS 18 are spurring a surge in app engagement, with developers reporting significantly higher conversion rates since the update launched.', source:'Bloomberg', time:new Date(now-12600000).toISOString(), category:'Tech', url:'https://finance.yahoo.com/news/china-markets/', sentiment:'positive' },
-    { id:'10', title:'European Central Bank Cuts Rates for Second Time This Year', summary:'The ECB reduced its benchmark rate by 25 basis points, citing easing inflation across the eurozone. The euro weakened modestly against the dollar following the announcement.', source:'Financial Times', time:new Date(now-14700000).toISOString(), category:'Macro', url:'https://finance.yahoo.com/news/', sentiment:'neutral' },
-    { id:'11', title:'Amazon Web Services Revenue Growth Accelerates on AI Demand', summary:'AWS posted 17% year-over-year revenue growth as enterprises accelerate cloud and AI infrastructure spending. CEO highlighted a multi-year growth runway.', source:'Wall Street Journal', time:new Date(now-16800000).toISOString(), category:'Earnings', url:'https://finance.yahoo.com/news/', sentiment:'positive' },
-    { id:'12', title:'IPO Market Shows Signs of Life With Several Filings This Week', summary:'Multiple companies filed S-1 documents with the SEC this week, signaling renewed confidence in the IPO pipeline after a slow period for new listings.', source:'CNBC', time:new Date(now-19200000).toISOString(), category:'IPO', url:'https://finance.yahoo.com/news/', sentiment:'positive' },
-  ]
-  return NextResponse.json({ articles, source: 'curated' })
+  if (!KEY) return NextResponse.json({ articles: MOCK })
+  try {
+    const [gen, crypto] = await Promise.all([
+      fetch(`${BASE}/news?category=general&token=${KEY}`, { next: { revalidate: 300 } }).then(r => r.ok ? r.json() : []),
+      fetch(`${BASE}/news?category=crypto&token=${KEY}`, { next: { revalidate: 300 } }).then(r => r.ok ? r.json() : [])
+    ])
+    const combined = [...(Array.isArray(gen) ? gen : []).slice(0,15), ...(Array.isArray(crypto) ? crypto : []).slice(0,5)]
+    const articles = combined
+      .filter((item: Record<string,unknown>) => item.headline && item.url && item.url !== '')
+      .slice(0, 18)
+      .map((item: Record<string,unknown>, i: number) => ({
+        id: String(i + 1),
+        title: item.headline as string,
+        summary: (item.summary as string) || (item.headline as string),
+        source: (item.source as string) || 'Financial News',
+        time: new Date((item.datetime as number) * 1000).toISOString(),
+        category: mapCategory((item.category as string) || 'general', item.headline as string),
+        url: item.url as string,
+        sentiment: 'neutral',
+      }))
+    return NextResponse.json({ articles: articles.length > 0 ? articles : MOCK })
+  } catch {
+    return NextResponse.json({ articles: MOCK })
+  }
 }
