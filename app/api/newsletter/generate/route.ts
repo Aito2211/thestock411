@@ -69,7 +69,7 @@ Use this EXACT format:
 [2-3 specific forward-looking catalysts: upcoming earnings, economic data, Fed events, technical levels.]
 
 **BOTTOM LINE**
-[One punchy paragraph — the single most important takeaway for traders today.]
+[One punchy paragraph \u00e2\u0080\u0094 the single most important takeaway for traders today.]
 
 Keep it under 600 words. Be specific, data-driven, direct. No generic statements. Write like a seasoned trader, not a press release.`
 
@@ -92,10 +92,10 @@ Keep it under 600 words. Be specific, data-driven, direct. No generic statements
 Markets are showing ${(spy?.dp as number) >= 0 ? 'bullish' : 'bearish'} tone with SPY ${(spy?.dp as number) >= 0 ? '+' : ''}${(spy?.dp as number)?.toFixed(2)}%. Key movers today: ${moversText || 'mixed action across sectors'}.
 
 **TODAY'S BIG MOVERS**
-${movers.map((m: Record<string,string>) => `• **${m.symbol}** ${m.direction === 'up' ? '+' : ''}${m.change}% at $${m.price}`).join('\n')}
+${movers.map((m: Record<string,string>) => `\u00e2\u0080\u00a2 **${m.symbol}** ${m.direction === 'up' ? '+' : ''}${m.change}% at $${m.price}`).join('\n')}
 
 **TODAY'S KEY STORIES**
-${news.slice(0,4).map((n: Record<string,unknown>) => `• ${n.headline}`).join('\n')}
+${news.slice(0,4).map((n: Record<string,unknown>) => `\u00e2\u0080\u00a2 ${n.headline}`).join('\n')}
 
 **EARNINGS IN FOCUS**
 ${earningsToday ? `Reporting today: ${earningsToday}` : 'No major earnings scheduled today.'}
