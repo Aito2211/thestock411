@@ -60,16 +60,16 @@ export async function POST(request: Request) {
     </div>
     <div class="body">
       <h2>You're subscribed!</h2>
-      <p>Welcome to The Stock411 Daily Brief — your AI-powered pre-market intelligence delivered every morning before the opening bell.</p>
-      <div class="feature"><div class="feature-icon">📈</div><div class="feature-text"><span class="feature-title">Yesterday's Big Movers</span>What moved and why — with context.</div></div>
-      <div class="feature"><div class="feature-icon">📰</div><div class="feature-text"><span class="feature-title">Top Market Stories</span>The 3 stories that actually matter today.</div></div>
-      <div class="feature"><div class="feature-icon">🗓️</div><div class="feature-text"><span class="feature-title">Earnings in Focus</span>Who's reporting and what to expect.</div></div>
-      <div class="feature"><div class="feature-icon">🎯</div><div class="feature-text"><span class="feature-title">What to Watch Tomorrow</span>Key levels, catalysts, and setups.</div></div>
+      <p>Welcome to The Stock411 Daily Brief \u00e2\u0080\u0094 your AI-powered pre-market intelligence delivered every morning before the opening bell.</p>
+      <div class="feature"><div class="feature-icon">\u00f0\u009f\u0093\u0088</div><div class="feature-text"><span class="feature-title">Yesterday's Big Movers</span>What moved and why \u00e2\u0080\u0094 with context.</div></div>
+      <div class="feature"><div class="feature-icon">\u00f0\u009f\u0093\u00b0</div><div class="feature-text"><span class="feature-title">Top Market Stories</span>The 3 stories that actually matter today.</div></div>
+      <div class="feature"><div class="feature-icon">\u00f0\u009f\u0097\u0093\u00ef\u00b8\u008f</div><div class="feature-text"><span class="feature-title">Earnings in Focus</span>Who's reporting and what to expect.</div></div>
+      <div class="feature"><div class="feature-icon">\u00f0\u009f\u008e\u00af</div><div class="feature-text"><span class="feature-title">What to Watch Tomorrow</span>Key levels, catalysts, and setups.</div></div>
     </div>
     <div class="cta">
       <a href="https://thestock411-v2.vercel.app/newsletter" class="btn">View Today's Brief</a>
     </div>
-    <div class="footer">The Stock411 · <a href="https://thestock411-v2.vercel.app/newsletter/unsubscribe?email=${email}" style="color:#9ca3af">Unsubscribe</a> · Data delayed 15 min · Not financial advice</div>
+    <div class="footer">The Stock411 \u00c2\u00b7 <a href="https://thestock411-v2.vercel.app/newsletter/unsubscribe?email=${email}" style="color:#9ca3af">Unsubscribe</a> \u00c2\u00b7 Data delayed 15 min \u00c2\u00b7 Not financial advice</div>
   </div>
 </body></html>`
       })
