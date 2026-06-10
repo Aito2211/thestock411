@@ -12,7 +12,7 @@ function md2html(text: string) {
     .replace(/^### (.+)$/gm, '<p style="color:#6b7280;font-size:13px;margin:0 0 20px">$1</p>')
     .replace(/^**(.+)**$/gm, '<h3 style="font-family:Barlow Condensed,sans-serif;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#1e3a5f;margin:20px 0 8px;padding-bottom:6px;border-bottom:2px solid #e5e7eb">$1</h3>')
     .replace(/**(.+?)**/g, '<strong style="font-weight:700;color:#111827">$1</strong>')
-    .replace(/^• (.+)$/gm, '<li style="font-size:14px;color:#374151;margin-bottom:6px;line-height:1.6">$1</li>')
+    .replace(/^\u00e2\u0080\u00a2 (.+)$/gm, '<li style="font-size:14px;color:#374151;margin-bottom:6px;line-height:1.6">$1</li>')
     .replace(/(<li[^>]*>.*</li>
 ?)+/g, s => '<ul style="padding-left:20px;margin:8px 0">'+s+'</ul>')
     .replace(/^([^<
@@ -114,7 +114,7 @@ export default function NewsletterPage() {
         <div className="rounded-2xl p-6 border" style={{background:'linear-gradient(135deg,#1e3a5f,#2563eb)',borderColor:'#2563eb'}}>
           <div className="flex items-center gap-2 mb-1"><Mail size={15} className="text-yellow-300"/><span className="text-xs font-bold uppercase tracking-widest text-blue-200">Free Newsletter</span></div>
           <h3 className="font-black text-xl text-white mb-1" style={{fontFamily:"'Barlow Condensed'"}}>Get This Every Morning at 7 AM ET</h3>
-          <p className="text-sm text-blue-200 mb-4">AI-generated pre-market brief — top movers, earnings previews, key levels to watch.</p>
+          <p className="text-sm text-blue-200 mb-4">AI-generated pre-market brief \u00e2\u0080\u0094 top movers, earnings previews, key levels to watch.</p>
           {subState==='done' ? (
             <div className="flex items-center gap-2 text-yellow-300 font-bold text-sm"><Zap size={14}/>You're in! Look for tomorrow's brief.</div>
           ) : (
