@@ -41,7 +41,7 @@ export async function GET(request: Request) {
       .replace(/^### (.+)$/gm, '<p style="color:#6b7280;font-size:13px;margin:0 0 16px">\$1</p>')
       .replace(/^**(.+)**$/gm, '<h3 style="font-size:14px;font-weight:800;text-transform:uppercase;color:#1e3a5f;margin:20px 0 8px;padding-bottom:4px;border-bottom:2px solid #e5e7eb">\$1</h3>')
       .replace(/**(.+?)**/g, '<strong>\$1</strong>')
-      .replace(/^• (.+)$/gm, '<li style="margin-bottom:6px;color:#374151;font-size:14px">\$1</li>')
+      .replace(/^\u00e2\u0080\u00a2 (.+)$/gm, '<li style="margin-bottom:6px;color:#374151;font-size:14px">\$1</li>')
       .replace(/^([^<
 ].+)$/gm, '<p style="font-size:14px;color:#374151;line-height:1.7;margin:0 0 10px">\$1</p>')
 
@@ -68,7 +68,7 @@ export async function GET(request: Request) {
     <a href="https://thestock411-v2.vercel.app/newsletter" style="display:inline-block;background:#facc15;color:#111827;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:800;font-size:14px">View Full Brief Online</a>
   </div>
   <div style="padding:16px 32px;text-align:center;font-size:12px;color:#9ca3af;border-top:1px solid #f3f4f6">
-    The Stock411 · Data delayed 15 min · Not financial advice<br>
+    The Stock411 \u00c2\u00b7 Data delayed 15 min \u00c2\u00b7 Not financial advice<br>
     <a href="https://thestock411-v2.vercel.app" style="color:#9ca3af">thestock411.com</a>
   </div>
 </div>
@@ -82,7 +82,7 @@ export async function GET(request: Request) {
       body: JSON.stringify({
         from: 'The Stock411 <brief@thestock411.com>',
         to: subscribers,
-        subject: `The Stock411 Daily Brief — ${dateFormatted}`,
+        subject: `The Stock411 Daily Brief \u00e2\u0080\u0094 ${dateFormatted}`,
         html: emailHtml
       })
     })
